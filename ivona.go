@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	ivonago "github.com/jpadilla/ivona-go"
+	ivonago "github.com/omie/ivona-go"
 )
 
 var client *ivonago.Ivona
