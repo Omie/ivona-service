@@ -22,7 +22,12 @@ func main() {
 	}
 	initIvona(accessKey, secretKey)
 
-	err := StartHTTPServer(host, port)
+	err := loadVoices()
+	if err != nil {
+		log.Println("Error fetching voices", err)
+	}
+
+	err = StartHTTPServer(host, port)
 	if err != nil {
 		log.Println("Error starting server", err)
 	}

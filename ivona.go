@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -10,16 +11,39 @@ import (
 	ivonago "github.com/omie/ivona-go"
 )
 
-var client *ivonago.Ivona
+var (
+	client    *ivonago.Ivona
+	voicesMap = make(map[string]ivonago.Voice)
+)
 
 func initIvona(accessKey, secretKey string) {
 	client = ivonago.New(accessKey, secretKey)
 }
 
+func loadVoices() error {
+	options := ivonago.Voice{}
+	listResp, err := client.ListVoices(options)
+	if err != nil {
+		return err
+	}
+	for _, v := range listResp.Voices {
+		voicesMap[v.Name] = v
+	}
+	log.Println("loaded voices: ", len(listResp.Voices))
+	return nil
+}
+
 func GetTTS(text, voice string) (resp []byte, err error) {
 	log.Println("--- GetTTS", text, voice)
 
+	v, ok := voicesMap[voice]
+	if !ok {
+		err = errors.New("Invalid voice name")
+		return
+	}
 	options := ivonago.NewSpeechOptions(text)
+	options.Voice = &v //set voice options
+
 	r, err := client.CreateSpeech(options)
 	if err != nil {
 		log.Println("Error getting response from Ivona: text:", err)
