@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 
 	"github.com/gorilla/mux"
 	ivonago "github.com/omie/ivona-go"
@@ -73,9 +74,36 @@ func GetVoices(name, language, gender string) (resp []byte, err error) {
 
 func getTTSHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("--- getTTSHandler")
-	r.ParseForm()
-	text := r.FormValue("text")
-	voice := r.FormValue("voice")
+
+	var text, voice string = "", ""
+	if r.Method == "GET" {
+		u, _ := url.Parse(r.URL.String())
+		queryParams := u.Query()
+
+		_text, ok := queryParams["text"]
+		if ok {
+			text = _text[0]
+		}
+
+		_voice, ok := queryParams["voice"]
+		if ok {
+			voice = _voice[0]
+		}
+	}
+	if r.Method == "POST" {
+		r.ParseForm()
+		text = r.FormValue("text")
+		voice = r.FormValue("voice")
+	}
+
+	if text == "" {
+		http.Error(w, "text is empty", http.StatusInternalServerError)
+		return
+	}
+
+	if voice == "" {
+		voice = "Nicole"
+	}
 
 	tts, err := GetTTS(text, voice)
 	if err != nil {
@@ -107,7 +135,7 @@ func StartHTTPServer(host string, port string) error {
 	r := mux.NewRouter()
 	r.StrictSlash(true)
 
-	r.HandleFunc("/", getTTSHandler).Methods("POST")
+	r.HandleFunc("/", getTTSHandler).Methods("GET", "POST")
 	r.HandleFunc("/voices", getVoicesHandler).Methods("POST")
 
 	http.Handle("/", r)
