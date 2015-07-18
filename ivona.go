@@ -44,6 +44,7 @@ func GetTTS(text, voice string) (resp []byte, err error) {
 	}
 	options := ivonago.NewSpeechOptions(text)
 	options.Voice = &v //set voice options
+	options.OutputFormat.Codec = "OGG"
 
 	r, err := client.CreateSpeech(options)
 	if err != nil {
@@ -111,7 +112,7 @@ func getTTSHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "audio/mpeg3")
+	w.Header().Set("Content-Type", "audio/ogg")
 	w.Write(tts)
 }
 
