@@ -1,4 +1,4 @@
-package main
+package main // import "github.com/omie/ivona-service"
 
 import (
 	"log"
