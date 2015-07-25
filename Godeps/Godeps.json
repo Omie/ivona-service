@@ -1,0 +1,23 @@
+{
+	"ImportPath": "github.com/omie/ivona-service",
+	"GoVersion": "go1.4.1",
+	"Deps": [
+		{
+			"ImportPath": "github.com/bmizerany/aws4",
+			"Rev": "5fb2e72396263668edd9a2956052e402cf6c104a"
+		},
+		{
+			"ImportPath": "github.com/gorilla/context",
+			"Rev": "215affda49addc4c8ef7e2534915df2c8c35c6cd"
+		},
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Rev": "e444e69cbd2e2e3e0749a2f3c717cec491552bbf"
+		},
+		{
+			"ImportPath": "github.com/omie/ivona-go",
+			"Comment": "v0.1-2-gb6acd0b",
+			"Rev": "b6acd0b48cf1b89e3e8ab7a3a211815b4039a05a"
+		}
+	]
+}
