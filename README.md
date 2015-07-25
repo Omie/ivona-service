@@ -40,6 +40,8 @@ Endpoints
 }
 ```
 
+License
+--------
 
 MIT License
 
